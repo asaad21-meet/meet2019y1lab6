@@ -76,10 +76,30 @@ for this_food_pos in food_pos :
     food.goto(this_food_pos)
     gif_stamp=food.stamp()
     food_stamps.append(gif_stamp)
+def make_food():
+    #The screen positions go from -SIZE/2 to +SIZE/2
+    #But we need to make food pieces only appear on game squares
+    #So we cut up the game board into multiples of SQUARE_SIZE.
+    min_x=-int(SIZE_X/2/SQUARE_SIZE)+1
+    max_x=int(SIZE_X/2/SQUARE_SIZE)-1
+    min_y=-int(SIZE_Y/2/SQUARE_SIZE)+1
+    max_y=int(SIZE_Y/2/SQUARE_SIZE)-1
+    
+    #Pick a position that is a random multiple of SQUARE_SIZE
+    food_x = random.randint(min_x,max_x)*SQUARE_SIZE
+    food_y = random.randint(min_y,max_y)*SQUARE_SIZE
+    food.goto(food_x,food_y)
+    food_pos.append((food_x,food_y))
+    food_turtle_stamp=food.stamp()
+    food_stamps.append(food_turtle_stamp)
+
 def move_snake():
     my_pos = snake.pos()
     x_pos = my_pos[0]
     y_pos = my_pos[1]
+    if len(food_stamps) <= 6 :
+       make_food()
+
 
     if snake.pos() in food_pos:
         food_index=food_pos.index(snake.pos()) #What does this do?
@@ -87,6 +107,7 @@ def move_snake():
         food_pos.pop(food_index) #Remove eaten food position
         food_stamps.pop(food_index) #Remove eaten food stamp
         print("You have eaten the food!")
+        print(new_stamp())
         
         
 
@@ -103,6 +124,8 @@ def move_snake():
     new_stamp()
 
     remove_tail()
+    if snake.pos() in pos_list[:-1]:
+     quit()
 
 
     if x_pos >= RIGHT_EDGE:
@@ -121,7 +144,7 @@ def move_snake():
     turtle.ontimer(move_snake,TIME_STEP)
 move_snake()
 
-turtle.bgcolor("blue")
+turtle.bgcolor("red")
 turtle.mainloop()
 
 
