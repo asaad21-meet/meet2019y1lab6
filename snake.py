@@ -21,7 +21,7 @@ food_stamps = []
 
 
 snake = turtle.clone()
-snake.shape("square")
+snake.shape("triangle")
 
 
 
@@ -67,7 +67,6 @@ turtle.onkeypress(right, "Right")
 turtle.onkeypress(left, "Left")
 turtle.listen()
 turtle.register_shape('trash.gif')
-
 food = turtle.clone()
 food.shape("trash.gif")
 food_pos = [(100,100), (-100,100), (-100,-100), (100,-100)]
@@ -77,9 +76,6 @@ for this_food_pos in food_pos :
     gif_stamp=food.stamp()
     food_stamps.append(gif_stamp)
 def make_food():
-    #The screen positions go from -SIZE/2 to +SIZE/2
-    #But we need to make food pieces only appear on game squares
-    #So we cut up the game board into multiples of SQUARE_SIZE.
     min_x=-int(SIZE_X/2/SQUARE_SIZE)+1
     max_x=int(SIZE_X/2/SQUARE_SIZE)-1
     min_y=-int(SIZE_Y/2/SQUARE_SIZE)+1
@@ -93,13 +89,38 @@ def make_food():
     food_turtle_stamp=food.stamp()
     food_stamps.append(food_turtle_stamp)
 
+turtle.register_shape("p.gif")
+poison = turtle.clone()
+poison.shape("p.gif")
+poison_pos = [(100,150), (-120,100), (-100,-90), (100,-120)]
+poison_stamps = []
+
+def make_poison():
+    min1_x=-int(SIZE_X/2/SQUARE_SIZE)+2
+    
+    max1_x=int(SIZE_X/2/SQUARE_SIZE)-3
+    min1_y=-int(SIZE_Y/2/SQUARE_SIZE)-2
+    max1_y=int(SIZE_Y/2/SQUARE_SIZE)-3
+    poison_x = random.randint(min1_x,max1_x)*SQUARE_SIZE
+    poison_y = random.randint(min1_y,max1_y)*SQUARE_SIZE
+
+    poison.goto(poison_x,poison_y)
+    poison_pos.append((poison_x,poison_y))
+    poison_turtle_stamp=poison.stamp()
+    poison_stamps.append(poison_turtle_stamp)
+    poison_pos.append(poison.pos())
+    
+
 def move_snake():
     my_pos = snake.pos()
     x_pos = my_pos[0]
     y_pos = my_pos[1]
+
     if len(food_stamps) <= 6 :
        make_food()
 
+    if len(poison_stamps) <= 3 :
+       make_poison()
 
     if snake.pos() in food_pos:
         food_index=food_pos.index(snake.pos()) #What does this do?
@@ -107,7 +128,18 @@ def move_snake():
         food_pos.pop(food_index) #Remove eaten food position
         food_stamps.pop(food_index) #Remove eaten food stamp
         print("You have eaten the food!")
-        print(new_stamp())
+        new_stamp()
+
+    if snake.pos() in poison_pos:
+        poison_index=poison_pos.index(snake.pos()) #What does this do?
+        poison.clearstamp(poison_stamps[poison_index]) #Remove eaten food stamp
+        print("01")
+        poison_pos.pop(poison_index) #Remove eaten food position
+        print("0")
+        poison_stamps.pop(poison_index) #Remove eaten food stamp
+        print("You have eaten the poison!")
+        remove_tail()
+       
         
         
 
