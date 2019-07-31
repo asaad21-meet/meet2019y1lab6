@@ -23,6 +23,8 @@ food_stamps = []
 snake = turtle.clone()
 snake.shape("triangle")
 
+snake_color=["navy","seagreen","maroon","orange"]
+
 
 
 turtle.hideturtle()
@@ -92,8 +94,9 @@ def make_food():
 turtle.register_shape("p.gif")
 poison = turtle.clone()
 poison.shape("p.gif")
-poison_pos = [(100,150), (-120,100), (-100,-90), (100,-120)]
+##poison_pos = [(100,150), (-120,100), (100,-120)]
 poison_stamps = []
+poison_pos=[]
 
 def make_poison():
     min1_x=-int(SIZE_X/2/SQUARE_SIZE)+2
@@ -108,8 +111,20 @@ def make_poison():
     poison_pos.append((poison_x,poison_y))
     poison_turtle_stamp=poison.stamp()
     poison_stamps.append(poison_turtle_stamp)
-    poison_pos.append(poison.pos())
     
+def make_super1():
+    min2_x=-int(SIZE_X/2/SQUARE_SIZE)+3
+    
+    max2_x=int(SIZE_X/2/SQUARE_SIZE)-4
+    min2_y=-int(SIZE_Y/2/SQUARE_SIZE)-3
+    max2_y=int(SIZE_Y/2/SQUARE_SIZE)-4
+    super1_x = random.randint(min2_x,max2_x)*SQUARE_SIZE
+    super1_y = random.randint(min2_y,max2_y)*SQUARE_SIZE
+
+    super1.goto(super1_x,super1_y)
+    super1_pos.append((super1_x,super1_y))
+    super1_turtle_stamp=super1.stamp()
+    super1_stamps.append(super1_turtle_stamp)    
 
 def move_snake():
     my_pos = snake.pos()
@@ -121,17 +136,20 @@ def move_snake():
 
     if len(poison_stamps) <= 3 :
        make_poison()
-
     if snake.pos() in food_pos:
-        food_index=food_pos.index(snake.pos()) #What does this do?
+        food_index =food_pos.index(snake.pos()) #What does this do?
         food.clearstamp(food_stamps[food_index]) #Remove eaten food stamp
         food_pos.pop(food_index) #Remove eaten food position
         food_stamps.pop(food_index) #Remove eaten food stamp
         print("You have eaten the food!")
         new_stamp()
+        snake.color(random.choice(snake_color))
 
     if snake.pos() in poison_pos:
         poison_index=poison_pos.index(snake.pos()) #What does this do?
+        print('44')
+        print(poison_index)
+        print(poison_stamps)
         poison.clearstamp(poison_stamps[poison_index]) #Remove eaten food stamp
         print("01")
         poison_pos.pop(poison_index) #Remove eaten food position
@@ -139,6 +157,7 @@ def move_snake():
         poison_stamps.pop(poison_index) #Remove eaten food stamp
         print("You have eaten the poison!")
         remove_tail()
+        
        
         
         
@@ -173,10 +192,15 @@ def move_snake():
          print("You hit the up edge! Game over!")
          quit()
 
+
+    if len(pos_list)==0:
+        print("ffffff")
+        quit()
+
+
     turtle.ontimer(move_snake,TIME_STEP)
 move_snake()
-
-turtle.bgcolor("red")
+turtle.bgpic("background.gif")
 turtle.mainloop()
 
 
